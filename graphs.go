@@ -8,7 +8,7 @@ import (
 
 func main() {
 	edges := uint8(3)
-	graphs := GenerateGraphs(edges)
+	graphs := GenerateUndirectedGraphs(edges)
 	fmt.Println("len", edges, len(graphs))
 	for _, g := range graphs {
 		fmt.Println(g)
@@ -18,29 +18,61 @@ func main() {
 type Graph []Node
 type Node int16
 
-func (g Graph) Copy() Graph {
-	h := make(Graph, len(g))
-	copy(h, g)
-	return h
+func NewGraph(nodes uint8) Graph {
+	return make(Graph, nodes)
 }
 
-func (g Graph) AddEdge(i, j uint8) {
+func (g Graph) AddDirectedEdge(i, j uint8) {
+	g[i] |= 1 << j
+}
+
+func (g Graph) AddUndirectedEdge(i, j uint8) {
 	g[i] |= 1 << j
 	g[j] |= 1 << i
+}
+
+func (g Graph) SwapNodes(i, j uint8) {
+	g[i], g[j] = g[j], g[i]
+	for n, node := range g {
+		// Swap individual bits. http://graphics.stanford.edu/~seander/bithacks.html#SwappingBitsXOR
+		x := (node>>i ^ node>>j) & 1
+		g[n] = node ^ (x<<i | x<<j)
+	}
 }
 
 func (g Graph) HasEdge(i, j uint8) bool {
 	return g[i]&(1<<j) != 0
 }
 
-func GenerateGraphs(nodes uint8) []Graph {
+func (g Graph) Copy() Graph {
+	h := make(Graph, len(g))
+	copy(h, g)
+	return h
+}
+
+func GenerateUndirectedGraphs(nodes uint8) []Graph {
 	graphs := []Graph{make(Graph, nodes)}
 	for i := uint8(0); i < nodes; i++ {
 		for j := uint8(i); j < nodes; j++ {
 			l := len(graphs)
 			for k := 0; k < l; k++ {
 				g := graphs[k].Copy()
-				g.AddEdge(i, j)
+				g.AddUndirectedEdge(i, j)
+				graphs = append(graphs, g)
+			}
+		}
+	}
+	return graphs
+}
+
+func GenerateDirectedGraphs(nodes uint8) []Graph {
+	graphs := []Graph{make(Graph, nodes)}
+	for i := uint8(0); i < nodes; i++ {
+		for j := uint8(0); j < nodes; j++ {
+			l := len(graphs)
+			for k := 0; k < l; k++ {
+				g := graphs[k].Copy()
+				g.AddDirectedEdge(i, j)
 				graphs = append(graphs, g)
 			}
 		}
