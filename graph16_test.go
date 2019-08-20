@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestAdd(t *testing.T) {
+func TestGraph16Add(t *testing.T) {
 	g := NewGraph16(3)
 	g.Add(0, 0)
 	g.Add(0, 2)
@@ -19,7 +19,7 @@ func TestAdd(t *testing.T) {
 	}
 }
 
-func TestAddUndirected(t *testing.T) {
+func TestGraph16AddUndirected(t *testing.T) {
 	g := NewGraph16(3)
 	g.AddUndirected(1, 0)
 	h := Graph16{0x2, 0x1, 0x0}
@@ -28,7 +28,7 @@ func TestAddUndirected(t *testing.T) {
 	}
 }
 
-func TestSwap(t *testing.T) {
+func TestGraph16Swap(t *testing.T) {
 	g := Graph16{0x5, 0x3, 0x6}
 	g.Swap(0, 1)
 	h := Graph16{0x3, 0x6, 0x5}

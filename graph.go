@@ -9,8 +9,8 @@ import (
 type Graph interface {
 	Add(i, j uint)
 	AddUndirected(i, j uint)
-	Has(i, j uint) bool
 	Swap(i, j uint)
+	Has(i, j uint) bool
 	Copy() Graph
 	OutDegree(i uint) int
 	InDegree(i uint) int
