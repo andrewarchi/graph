@@ -25,7 +25,7 @@ func NewGraph(rank uint) Graph {
 	case rank == 0:
 		return nil
 	case rank <= 8:
-		return &Graph8{}
+		return &Graph8{0}
 	case rank <= 16:
 		return make(Graph16, rank)
 	default:
@@ -51,8 +51,8 @@ func Generate(g Graph) []Graph {
 	return graphs
 }
 
-// GenerateUndirected generates all possible undirected graphs of a maximum rank
-// starting with a given empty graph.
+// GenerateUndirected generates all possible undirected graphs of a
+// maximum rank starting with a given empty graph.
 func GenerateUndirected(g Graph) []Graph {
 	graphs := []Graph{g}
 	maxRank := g.Len()
@@ -69,14 +69,18 @@ func GenerateUndirected(g Graph) []Graph {
 	return graphs
 }
 
-// FormatAdjacency formats the graph as an adjacency list on multiple lines.
+// FormatAdjacency formats the graph as an adjacency list on multiple
+// lines.
 func FormatAdjacency(g Graph) string {
+	if g == nil {
+		return "<nil>"
+	}
 	var b strings.Builder
-	nodes := g.Len()
-	for i := 0; i < nodes; i++ {
+	l := g.Len()
+	for i := 0; i < l; i++ {
 		b.WriteString(strconv.FormatInt(int64(i), 10))
 		b.WriteByte(':')
-		for j := 0; j < nodes; j++ {
+		for j := 0; j < l; j++ {
 			if g.Has(uint(i), uint(j)) {
 				b.WriteByte(' ')
 				b.WriteString(strconv.FormatInt(int64(j), 10))
@@ -89,12 +93,15 @@ func FormatAdjacency(g Graph) string {
 
 // FormatList formats the graph as a list of edges on a single line.
 func FormatList(g Graph) string {
+	if g == nil {
+		return "<nil>"
+	}
 	var b strings.Builder
-	nodes := g.Len()
+	l := g.Len()
 	first := true
 	b.WriteByte('[')
-	for i := 0; i < nodes; i++ {
-		for j := 0; j < nodes; j++ {
+	for i := 0; i < l; i++ {
+		for j := 0; j < l; j++ {
 			if g.Has(uint(i), uint(j)) {
 				if !first {
 					b.WriteByte(' ')
@@ -109,5 +116,25 @@ func FormatList(g Graph) string {
 		}
 	}
 	b.WriteByte(']')
+	return b.String()
+}
+
+// FormatMatrix formats the graph as a matrix on multiple lines.
+func FormatMatrix(g Graph) string {
+	if g == nil {
+		return "<nil>"
+	}
+	var b strings.Builder
+	l := g.Len()
+	for i := 0; i < l; i++ {
+		for j := 0; j < l; j++ {
+			if g.Has(uint(i), uint(j)) {
+				b.WriteByte('*')
+			} else {
+				b.WriteByte(' ')
+			}
+		}
+		b.WriteByte('\n')
+	}
 	return b.String()
 }

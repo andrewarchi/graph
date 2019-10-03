@@ -10,6 +10,11 @@ type Graph8 struct {
 
 var _ Graph = (*Graph8)(nil)
 
+// NewGraph8 constructs a graph with 8 nodes.
+func NewGraph8() *Graph16 {
+	return &Graph16{0}
+}
+
 // Add adds a directed edge from node i to j.
 func (g *Graph8) Add(i, j uint) {
 	g.g |= 1 << (i*8 + j)
