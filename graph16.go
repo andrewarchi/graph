@@ -7,7 +7,6 @@ import (
 // Graph16 is a directed graph with at most 16 nodes.
 type Graph16 []uint16
 
-// Assert that Graph16 is a Graph.
 var _ Graph = (Graph16)(nil)
 
 // NewGraph16 constructs a graph with a given number of nodes.
@@ -49,12 +48,12 @@ func (g Graph16) Copy() Graph {
 	return h
 }
 
-// OutDegree returns the number of edges leading out from the given node.
+// OutDegree returns the number of edges directed from the given node.
 func (g Graph16) OutDegree(i uint) int {
 	return bits.OnesCount16(uint16(g[i]))
 }
 
-// InDegree returns the number of edges leading to the given node.
+// InDegree returns the number of edges directed to the given node.
 func (g Graph16) InDegree(i uint) int {
 	d := 0
 	for j := 0; j < len(g); j++ {

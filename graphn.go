@@ -28,8 +28,8 @@ func (g GraphN) Has(i, j uint) bool {
 	return g.v[p/64]&(1<<(p%64)) != 0
 }
 
-func (g GraphN) OutDegree(i uint) int {
-	for p := i * g.rank; p < (i+1)*g.rank; p++ {
-		g.v[p/64]
-	}
-}
+// func (g GraphN) OutDegree(i uint) int {
+// 	for p := i * g.rank; p < (i+1)*g.rank; p++ {
+// 		g.v[p/64]
+// 	}
+// }

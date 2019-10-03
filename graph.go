@@ -15,6 +15,7 @@ type Graph interface {
 	OutDegree(i uint) int
 	InDegree(i uint) int
 	Len() int
+	String() string
 }
 
 // Generate generates all possible directed graphs of a maximum rank
