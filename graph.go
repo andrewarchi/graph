@@ -18,6 +18,21 @@ type Graph interface {
 	String() string
 }
 
+// NewGraph constructs a graph with a given number of nodes, selecting
+// the type closest to the rank.
+func NewGraph(rank uint) Graph {
+	switch {
+	case rank == 0:
+		return nil
+	case rank <= 8:
+		return &Graph8{}
+	case rank <= 16:
+		return make(Graph16, rank)
+	default:
+		return NewGraphN(rank)
+	}
+}
+
 // Generate generates all possible directed graphs of a maximum rank
 // starting with a given empty graph.
 func Generate(g Graph) []Graph {
