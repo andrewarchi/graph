@@ -8,7 +8,8 @@ type GraphN struct {
 
 // NewGraphN constructs a graph with the given number of nodes.
 func NewGraphN(rank uint) *GraphN {
-	return &GraphN{make([]uint64, rank*rank/64), rank}
+	n := 1 + ((rank*rank - 1) / 64) // ceiling division
+	return &GraphN{make([]uint64, n), rank}
 }
 
 // Add adds a directed edge from node i to j.

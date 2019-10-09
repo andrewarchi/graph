@@ -119,8 +119,8 @@ func FormatList(g Graph) string {
 	return b.String()
 }
 
-// FormatMatrix formats the graph as a matrix on multiple lines.
-func FormatMatrix(g Graph) string {
+// FormatGrid formats the graph as a grid on multiple lines.
+func FormatGrid(g Graph) string {
 	if g == nil {
 		return "<nil>"
 	}
@@ -131,8 +131,43 @@ func FormatMatrix(g Graph) string {
 			if g.Has(uint(i), uint(j)) {
 				b.WriteByte('*')
 			} else {
-				b.WriteByte(' ')
+				b.WriteByte('-')
 			}
+		}
+		b.WriteByte('\n')
+	}
+	return b.String()
+}
+
+// FormatMatrix formats a graph as a matrix on multiple lines using
+// extending Unicode brackets.
+func FormatMatrix(g Graph) string {
+	if g == nil {
+		return "<nil>"
+	}
+	var b strings.Builder
+	l := g.Len()
+	for i := 0; i < l; i++ {
+		if i == 0 {
+			b.WriteRune('⎡')
+		} else if i == l-1 {
+			b.WriteRune('⎣')
+		} else {
+			b.WriteRune('⎢')
+		}
+		for j := 0; j < l; j++ {
+			if g.Has(uint(i), uint(j)) {
+				b.WriteByte('1')
+			} else {
+				b.WriteByte('-')
+			}
+		}
+		if i == 0 {
+			b.WriteRune('⎤')
+		} else if i == l-1 {
+			b.WriteRune('⎦')
+		} else {
+			b.WriteRune('⎥')
 		}
 		b.WriteByte('\n')
 	}
