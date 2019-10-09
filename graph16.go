@@ -11,6 +11,9 @@ var _ Graph = (Graph16)(nil)
 
 // NewGraph16 constructs a graph with a given number of nodes.
 func NewGraph16(rank uint) Graph16 {
+	if rank > 16 {
+		panic("graph: Graph16 rank out of bounds")
+	}
 	return make(Graph16, rank)
 }
 

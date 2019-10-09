@@ -5,14 +5,18 @@ import "math/bits"
 // Graph8 is a directed graph with 8 nodes with operations in constant
 // time.
 type Graph8 struct {
-	g uint64
+	g    uint64
+	rank uint8
 }
 
 var _ Graph = (*Graph8)(nil)
 
-// NewGraph8 constructs a graph with 8 nodes.
-func NewGraph8() *Graph16 {
-	return &Graph16{0}
+// NewGraph8 constructs a graph with a given number of nodes.
+func NewGraph8(rank uint) *Graph8 {
+	if rank > 8 {
+		panic("graph: Graph8 rank out of bounds")
+	}
+	return &Graph8{0, uint8(rank)}
 }
 
 // Add adds a directed edge from node i to j.
@@ -41,7 +45,7 @@ func (g *Graph8) Has(i, j uint) bool {
 
 // Copy creates a copy of the graph.
 func (g *Graph8) Copy() Graph {
-	return &Graph8{g.g}
+	return &Graph8{g.g, g.rank}
 }
 
 // OutDegree returns the number of edges directed from the given node.
@@ -66,7 +70,7 @@ func (g *Graph8) InDegree(i uint) int {
 }
 
 // Len returns the number of nodes in the graph.
-func (g *Graph8) Len() int { return 8 }
+func (g *Graph8) Len() int { return int(g.rank) }
 
 // String formats the graph as a list of edges on a single line.
 func (g *Graph8) String() string {

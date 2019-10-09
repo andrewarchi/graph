@@ -25,7 +25,7 @@ func NewGraph(rank uint) Graph {
 	case rank == 0:
 		return nil
 	case rank <= 8:
-		return &Graph8{0}
+		return &Graph8{0, uint8(rank)}
 	case rank <= 16:
 		return make(Graph16, rank)
 	default:
