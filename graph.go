@@ -9,9 +9,11 @@ import (
 type Graph interface {
 	Add(i, j uint)
 	AddUndirected(i, j uint)
+	Clear(i, j uint)
 	Swap(i, j uint)
 	Has(i, j uint) bool
 	Copy() Graph
+	Reverse() Graph
 	OutDegree(i uint) int
 	InDegree(i uint) int
 	Len() int

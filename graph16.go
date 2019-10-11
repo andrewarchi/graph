@@ -1,8 +1,6 @@
 package graph
 
-import (
-	"math/bits"
-)
+import "math/bits"
 
 // Graph16 is a directed graph with at most 16 nodes.
 type Graph16 []uint16
@@ -28,6 +26,11 @@ func (g Graph16) AddUndirected(i, j uint) {
 	g[j] |= 1 << i
 }
 
+// Clear removes the directed edge from node i to j.
+func (g Graph16) Clear(i, j uint) {
+	g[i] &^= 1 << j
+}
+
 // Swap isomorphically swaps nodes i and j.
 func (g Graph16) Swap(i, j uint) {
 	g[i], g[j] = g[j], g[i]
@@ -48,6 +51,19 @@ func (g Graph16) Has(i, j uint) bool {
 func (g Graph16) Copy() Graph {
 	h := make(Graph16, len(g))
 	copy(h, g)
+	return h
+}
+
+// Reverse creates a graph with reversed edges.
+func (g Graph16) Reverse() Graph {
+	h := make(Graph16, len(g))
+	for i, node := range g {
+		for node != 0 {
+			j := uint(bits.TrailingZeros16(node))
+			h.Add(j, uint(i))
+			node &^= 1 << j
+		}
+	}
 	return h
 }
 

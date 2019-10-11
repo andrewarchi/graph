@@ -30,6 +30,11 @@ func (g *Graph8) AddUndirected(i, j uint) {
 	g.g |= 1 << (i + j*8)
 }
 
+// Clear removes the directed edge from node i to j.
+func (g *Graph8) Clear(i, j uint) {
+	g.g &^= 1 << (i*8 + j)
+}
+
 // Swap isomorphically swaps nodes i and j.
 func (g *Graph8) Swap(i, j uint) {
 	x := (g.g>>(i*8) ^ g.g>>(j*8)) & 0xff
@@ -46,6 +51,22 @@ func (g *Graph8) Has(i, j uint) bool {
 // Copy creates a copy of the graph.
 func (g *Graph8) Copy() Graph {
 	return &Graph8{g.g, g.rank}
+}
+
+// Reverse creates a graph with reversed edges.
+func (g *Graph8) Reverse() Graph {
+	// "Hacker's Delight", Chapter 7-3
+	t := g.g
+	t = t&0xaa55aa55aa55aa55 |
+		(t&0x00aa00aa00aa00aa)<<7 |
+		(t>>7)&0x00aa00aa00aa00aa
+	t = t&0xcccc3333cccc3333 |
+		(t&0x0000cccc0000cccc)<<14 |
+		(t>>14)&0x0000cccc0000cccc
+	t = t&0xf0f0f0f00f0f0f0f |
+		(t&0x00000000f0f0f0f0)<<28 |
+		(t>>28)&0x00000000f0f0f0f0
+	return &Graph8{t, g.rank}
 }
 
 // OutDegree returns the number of edges directed from the given node.

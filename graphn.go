@@ -6,6 +6,8 @@ type GraphN struct {
 	rank uint
 }
 
+var _ Graph = (*GraphN)(nil)
+
 // NewGraphN constructs a graph with the given number of nodes.
 func NewGraphN(rank uint) *GraphN {
 	n := 1 + ((rank*rank - 1) / 64) // ceiling division
@@ -24,6 +26,12 @@ func (g *GraphN) AddUndirected(i, j uint) {
 	g.Add(j, i)
 }
 
+// Clear removes the directed edge from node i to j.
+func (g *GraphN) Clear(i, j uint) {
+	p := i*g.rank + j
+	g.g[p/64] &^= 1 << (p % 64)
+}
+
 // Swap is unimplemented.
 func (g *GraphN) Swap(i, j uint) {
 	panic("graph: swap is unimplemented for GraphN")
@@ -40,6 +48,19 @@ func (g *GraphN) Copy() Graph {
 	h := make([]uint64, len(g.g))
 	copy(h, g.g)
 	return &GraphN{h, g.rank}
+}
+
+// Reverse creates a graph with reversed edges.
+func (g GraphN) Reverse() Graph {
+	h := &GraphN{make([]uint64, len(g.g)), g.rank}
+	for i := uint(0); i < g.rank; i++ {
+		for j := uint(0); j < g.rank; j++ {
+			if g.Has(i, j) {
+				h.Add(j, i)
+			}
+		}
+	}
+	return h
 }
 
 // OutDegree is unimplemented.
