@@ -1,4 +1,4 @@
-package graph
+package graph // import "github.com/andrewarchi/graph"
 
 // GraphN is a directed graph with an arbitrary number of nodes.
 type GraphN struct {

@@ -1,4 +1,4 @@
-package graph
+package graph // import "github.com/andrewarchi/graph"
 
 import (
 	"strconv"
