@@ -175,3 +175,74 @@ func FormatMatrix(g Graph) string {
 	}
 	return b.String()
 }
+
+// FormatGridLabeled formats a graph as an ASCII grid with row and
+// column labels.
+func FormatGridLabeled(g Graph, labels []string) string {
+	if g == nil {
+		return "<nil>"
+	}
+	l := g.Len()
+	if l != len(labels) {
+		panic("graph: unequal number of edges and labels")
+	}
+
+	var maxLen int
+	runeLabels := make([][]rune, l)
+	for i := range labels {
+		label := []rune(labels[i])
+		if len(label) > maxLen {
+			maxLen = len(label)
+		}
+		runeLabels[i] = label
+	}
+	sb := make([]byte, maxLen)
+	for i := range sb {
+		sb[i] = ' '
+	}
+	spaces := string(sb)
+
+	// Print bottom aligned column labels
+	var b strings.Builder
+	for i := 0; i < maxLen; i++ {
+		b.WriteString(spaces)
+		b.WriteString("  ")
+		for _, label := range runeLabels {
+			r := ' '
+			if d := maxLen - len(label); i >= d {
+				r = label[i-d]
+			}
+			b.WriteByte(' ')
+			b.WriteRune(r)
+		}
+		b.WriteByte('\n')
+	}
+
+	// Print horizontal line
+	b.WriteString(spaces)
+	b.WriteString("  ")
+	for i := 0; i < l; i++ {
+		b.WriteString("--")
+	}
+	b.WriteByte('\n')
+
+	for i := 0; i < l; i++ {
+		// Print right aligned row labels
+		d := maxLen - len(runeLabels[i])
+		b.WriteString(spaces[:d])
+		b.WriteString(labels[i])
+		b.WriteString(" |")
+
+		// Print adjacency list
+		for j := 0; j < l; j++ {
+			c := byte('.')
+			if g.Has(uint(i), uint(j)) {
+				c = 'X'
+			}
+			b.WriteByte(' ')
+			b.WriteByte(c)
+		}
+		b.WriteByte('\n')
+	}
+	return b.String()
+}
